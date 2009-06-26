@@ -8,6 +8,7 @@ import org.jivesoftware.smack.XMPPException
 import org.jivesoftware.smack.filter.PacketFilter
 import org.jivesoftware.smack.filter.PacketTypeFilter
 import org.jivesoftware.smack.packet.Message
+import org.jivesoftware.smackx.muc.MultiUserChat
 
 import org.apache.log4j.Logger
 
@@ -27,32 +28,36 @@ class ChatListener {
     def host
     def port = 5222
     def serviceName = "XMPP"
-
     def userName
     def password
+
+    // if we're going to listen to a MUC too
+    def chatRoom
 
     def listenerMethod
     def targetService
 
     def connect = {
+        try{
+            ConnectionConfiguration cc = new ConnectionConfiguration(host,
+                port, serviceName)
 
+            connection = new XMPPConnection(cc)
 
-        ConnectionConfiguration cc = new ConnectionConfiguration(host,
-            port, serviceName)
-
-        connection = new XMPPConnection(cc)
-
-        log.debug "Connecting to Jabber server"
-        connection.connect()
-        connection.login(userName, password, userName + Long.toHexString(System.currentTimeMillis()))
-        log.debug "Connected to Jabber server: ${connection.isConnected()}"
-
+            log.debug "Connecting to Jabber server and ${chatRoom} room"
+            connection.connect()
+            connection.login(userName, password, userName + Long.toHexString(System.currentTimeMillis()))
+            log.debug "Connected to Jabber server: ${connection.isConnected()}"
         
-
-        log.error "Jabber Connection failed: $e.message", e
-
-        
-
+            // obviously only join MUC if chatRoom is defined
+            if (chatRoom) {
+                MultiUserChat muc = new MultiUserChat(connection, chatRoom )
+                muc.join(userName)
+            }
+        } catch(Exception e) {
+            // throwing a prop not found on the e...
+            log.error "Jabber Connection failed: $e.message", e
+        }
     }
 
     def listen = { 
@@ -74,10 +79,7 @@ class ChatListener {
         log.debug "Adding Jabber listnener..."
         connection.addPacketListener(myListener, msgFilter)
 
-
     }
-
-
 
     def disconnect() {
 
@@ -85,8 +87,6 @@ class ChatListener {
         connection.disconnect()
 
     }
-
-
 
     def sendJabberMessage(String to, String msg) {
         if (!connection)
@@ -99,6 +99,5 @@ class ChatListener {
         log.debug "Sending Jabber message to ${to} with content ${msg}"
         chat.sendMessage(msgObj)
     }
-
 
 }
