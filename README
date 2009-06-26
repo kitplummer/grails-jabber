@@ -11,10 +11,61 @@ This is a small Grails plugin for Jabber which allows you to send and receive Ja
 
 Read some instructions on how to use it at http://github.com/glenasmith/grails-jabber/wikis
 
-Eventually, the docs will move to http://www.grails.org/Jabber+Plugin
+(Updated for MUC listener support and copying in Glen's original Wiki content)
+There is a little configuration required in your /conf/Config.groovy file. Add the following section and point it to your jabber server of choice:
 
+<pre>
+   chat {
+        serviceName = "local.decaf"
+        host = "localhost"
+        port = 5222
+        username = "glen"
+        password = "password"
+    }
+</pre>
+
+If you're using it with Google Talk, you'll want your settings to be something like:
+
+<pre>
+chat {
+    serviceName = "gmail.com"
+    host = "talk.google.com"
+    port = 5222
+    username = "yourid@gmail.com"
+    password = "your_password"
+}
+</pre>
+
+Once that's in, you can happily invoke sendJabberMessage(userId, content) from any of your controllers or services:
+
+<pre>
+sendJabberMessage("glen@decaf.local", "Just a tester....")
+</pre>
+
+If you'd like to listen for incoming Jabber messages, you need to add an 'expose' list similar to the JMS and Remoting plugin (which I used as the sample template for my plugin) to one of your service classes.
+
+<pre>
+class DemoService {
+
+    static expose = [ 'jabber' ]
+    
+    // if you want to listen on a MUC
+    static room = 'room@conference.server'
+    
+    def onJabberMessage = {msg ->
+
+        println "Eeek a message!!! From ${msg.from} with body ${msg.body}"
+  
+    }
+}
+</pre>
+
+Eventually, the docs will move to http://www.grails.org/Jabber+Plugin
+(This seems to be futile, as there is now a Grails-XMPP plugin in the repo. ???)
 
 # License
 
 The Jabber Plugin is licensed under the Apache version 2. Knock yourself out.
+
+
  
