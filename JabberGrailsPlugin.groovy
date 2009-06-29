@@ -28,8 +28,6 @@ This plugin provides the opportunity to send and receive Chat messages via the J
             if (exposeList != null && exposeList.contains('jabber') && !listenerDefined) {
                 println "adding Jabber listener for ${service.shortName} to Spring"
 
-                def room = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'room')
-							
                 def method = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'jabberListenerMethod')
                 if (!method)
                     method = "onJabberMessage"
@@ -40,7 +38,9 @@ This plugin provides the opportunity to send and receive Chat messages via the J
                     serviceName = CFG.config.chat.serviceName
                     userName = CFG.config.chat.username
                     password = CFG.config.chat.password
-                    chatRoom = room
+                    chatRoom = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'room')
+                    elementName = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'elementName')
+                    namespace = GrailsClassUtils.getStaticPropertyValue(serviceClass, 'namespace')
                     listenerMethod = method
                     targetService = ref("${service.propertyName}")
 

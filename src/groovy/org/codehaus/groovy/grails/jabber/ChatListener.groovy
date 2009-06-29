@@ -1,5 +1,8 @@
 package org.codehaus.groovy.grails.jabber
 
+import java.io.StringReader;
+import java.util.regex.Pattern;
+
 import groovy.xml.MarkupBuilder
 
 import org.jivesoftware.smack.Chat
@@ -18,6 +21,7 @@ import org.jivesoftware.smack.packet.PacketExtension
 import org.jivesoftware.smackx.muc.DiscussionHistory
 import org.jivesoftware.smackx.muc.MultiUserChat
 
+import org.xmlpull.v1.XmlPullParser
 
 import org.apache.log4j.Logger
 
@@ -42,13 +46,20 @@ class ChatListener {
 
     // if we're going to listen to a MUC too
     def chatRoom
-
+    
+    // and we're needing an extension handler
+    def elementName
+    def namespace
+    
     def listenerMethod
     def targetService
 
     def connect = {
         try{
-            
+            ProviderManager.getInstance().addExtensionProvider(elementName, 
+                            namespace, 
+                            new PluginPacketProvider(elementName, namespace))
+                
             ConnectionConfiguration cc = new ConnectionConfiguration(host,
                 port, serviceName)
 
@@ -64,13 +75,16 @@ class ChatListener {
                 MultiUserChat muc = new MultiUserChat(connection, chatRoom )
                 muc.join(userName)
             }
+            
+             
+                
         } catch(Exception e) {
             // throwing a prop not found on the e...
             log.error "Jabber Connection failed: $e.message", e
         }
 
     }
-
+    
     def listen = { 
         
         def msgFilter
