@@ -5,18 +5,18 @@ import org.codehaus.groovy.grails.jabber.ChatListener
 
 
 class JabberGrailsPlugin {
-    def version = 0.1
+    def version = 0.2
     def dependsOn = [:]
 
-    def author = "Glen Smith"
-    def authorEmail = "glen@bytecode.com.au"
+    def author = "Kit Plummer (o.g. Glen Smith)"
+    def authorEmail = "kitplummer@gmail.com"
     def title = "Jabber Plugin"
     def description = '''\
-This plugin provides the opportunity to send and receive Chat messages via the Jabber API.
+This plugin provides the opportunity to send and receive Chat messages via the Jabber API. Based off the original work by Glen Smith
 '''
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/Jabber+Plugin"
+    def documentation = "http://github.com/kitplummer"
 
     def doWithSpring = {
 

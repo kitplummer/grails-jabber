@@ -1,5 +1,7 @@
 package org.codehaus.groovy.grails.jabber
 
+import groovy.xml.MarkupBuilder
+
 import org.jivesoftware.smack.Chat
 import org.jivesoftware.smack.ConnectionConfiguration
 import org.jivesoftware.smack.PacketListener
@@ -7,8 +9,15 @@ import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.XMPPException
 import org.jivesoftware.smack.filter.PacketFilter
 import org.jivesoftware.smack.filter.PacketTypeFilter
+import org.jivesoftware.smack.filter.FromMatchesFilter
 import org.jivesoftware.smack.packet.Message
+import org.jivesoftware.smack.provider.PacketExtensionProvider
+import org.jivesoftware.smack.provider.ProviderManager
+import org.jivesoftware.smack.packet.PacketExtension
+
+import org.jivesoftware.smackx.muc.DiscussionHistory
 import org.jivesoftware.smackx.muc.MultiUserChat
+
 
 import org.apache.log4j.Logger
 
@@ -39,6 +48,7 @@ class ChatListener {
 
     def connect = {
         try{
+            
             ConnectionConfiguration cc = new ConnectionConfiguration(host,
                 port, serviceName)
 
@@ -61,20 +71,26 @@ class ChatListener {
     }
 
     def listen = { 
-
+        
+        def msgFilter
+        
         if (!connection)
             connect()
-
-        PacketFilter msgFilter = new PacketTypeFilter(Message.class)
+        
+        if (chatRoom) {
+            msgFilter = new FromMatchesFilter(chatRoom)
+        } else {
+            msgFilter = new PacketTypeFilter(Message.class)
+        }
 
         def myListener = [processPacket: { packet ->
 
-                log.debug "Received message from ${packet.from}, subject: ${packet.subject}, body: ${packet.body}"
+                log.debug "Received message from ${packet.from}, subject: ${packet.subject}, body: ${packet.body}, extensions: ${packet.extensionsXML}"
                 // callback(packet)
 
                 targetService[listenerMethod].call(packet)
 
-            }] as PacketListener
+        }] as PacketListener
 
         log.debug "Adding Jabber listnener..."
         connection.addPacketListener(myListener, msgFilter)

@@ -1,10 +1,10 @@
-<plugin name='jabber' version='0.1' grailsVersion='1.1.1 &gt; *'>
-  <author>Glen Smith</author>
-  <authorEmail>glen@bytecode.com.au</authorEmail>
+<plugin name='jabber' version='0.2' grailsVersion='1.1.1 &gt; *'>
+  <author>Kit Plummer (o.g. Glen Smith)</author>
+  <authorEmail>kitplummer@gmail.com</authorEmail>
   <title>Jabber Plugin</title>
-  <description>This plugin provides the opportunity to send and receive Chat messages via the Jabber API.
+  <description>This plugin provides the opportunity to send and receive Chat messages via the Jabber API. Based off the original work by Glen Smith
 </description>
-  <documentation>http://grails.org/Jabber+Plugin</documentation>
+  <documentation>http://github.com/kitplummer</documentation>
   <resources>
     <resource>Config</resource>
     <resource>DataSource</resource>
