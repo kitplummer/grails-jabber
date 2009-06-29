@@ -44,6 +44,8 @@ sendJabberMessage("glen@decaf.local", "Just a tester....")
 
 If you'd like to listen for incoming Jabber messages, you need to add an 'expose' list similar to the JMS and Remoting plugin (which I used as the sample template for my plugin) to one of your service classes.
 
+Added support for listening to extensions too.
+
 <pre>
 class DemoService {
 
@@ -52,10 +54,17 @@ class DemoService {
     // if you want to listen on a MUC
     static room = 'room@conference.server'
     
+    // for consuming an extension
+    static elementName = 'SomeExtension'
+    static namespace = 'http://the.extensions.namespace'
+    
     def onJabberMessage = {msg ->
 
         println "Eeek a message!!! From ${msg.from} with body ${msg.body}"
-  
+
+        PacketExtension pe = msg.getExtension("SomeExtension", "http://the.extension.namespace")
+        println "Ext: ${pe.toXML()}"
+        
     }
 }
 </pre>
