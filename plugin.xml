@@ -4,11 +4,9 @@
   <title>Jabber Plugin</title>
   <description>This plugin provides the opportunity to send and receive Chat messages via the Jabber API. Based off the original work by Glen Smith
 </description>
-  <documentation>http://github.com/kitplummer</documentation>
+  <documentation>http://grails.org/plugin/jabber</documentation>
   <resources>
     <resource>Config</resource>
-    <resource>DataSource</resource>
-    <resource>UrlMappings</resource>
   </resources>
   <dependencies />
 </plugin>

@@ -68,6 +68,7 @@ class ChatListener {
             // throwing a prop not found on the e...
             log.error "Jabber Connection failed: $e.message", e
         }
+
     }
 
     def listen = { 
