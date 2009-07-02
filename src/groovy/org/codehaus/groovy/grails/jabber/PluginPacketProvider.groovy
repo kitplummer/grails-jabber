@@ -15,7 +15,7 @@ import org.xmlpull.v1.XmlPullParser
 class PluginPacketProvider implements PacketExtensionProvider
 {
     
-    private static final Logger log = Logger.getLogger(CollaborationWrapperPacketProvider.class)
+    private static final Logger log = Logger.getLogger(PluginPacketProvider.class)
     
     String elementName = null
     String namespace = null
