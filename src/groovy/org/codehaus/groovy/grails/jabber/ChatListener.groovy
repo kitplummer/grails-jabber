@@ -72,7 +72,9 @@ class ChatListener {
         
             // obviously only join MUC if chatRoom is defined
             if (chatRoom) {
-                MultiUserChat muc = new MultiUserChat(connection, chatRoom )
+                DiscussionHistory dh = new DiscussionHistory()
+                dh.setMaxStansas(0)
+                MultiUserChat muc = new MultiUserChat(connection, chatRoom, dh, 10000)
                 muc.join(userName)
             }
             

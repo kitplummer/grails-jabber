@@ -5,7 +5,7 @@ import org.codehaus.groovy.grails.jabber.ChatListener
 
 
 class JabberGrailsPlugin {
-    def version = 0.2
+    def version = 0.3
     def dependsOn = [:]
 
     def author = "Kit Plummer (o.g. Glen Smith)"
