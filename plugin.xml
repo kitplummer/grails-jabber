@@ -1,4 +1,4 @@
-<plugin name='jabber' version='0.2' grailsVersion='1.1.1 &gt; *'>
+<plugin name='jabber' version='0.3' grailsVersion='1.1.1 &gt; *'>
   <author>Kit Plummer (o.g. Glen Smith)</author>
   <authorEmail>kitplummer@gmail.com</authorEmail>
   <title>Jabber Plugin</title>

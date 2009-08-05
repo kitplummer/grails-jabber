@@ -74,8 +74,8 @@ class ChatListener {
             if (chatRoom) {
                 DiscussionHistory dh = new DiscussionHistory()
                 dh.setMaxStansas(0)
-                MultiUserChat muc = new MultiUserChat(connection, chatRoom, dh, 10000)
-                muc.join(userName)
+                MultiUserChat muc = new MultiUserChat(connection, chatRoom)
+                muc.join(userName, "", dh, 10000)
             }
             
              
