@@ -54,6 +54,8 @@ class ChatListener {
     def listenerMethod
     def targetService
 
+    def connected = false
+    
     def connect = {
         try{
             ProviderManager.getInstance().addExtensionProvider(elementName, 
@@ -78,11 +80,12 @@ class ChatListener {
                 muc.join(userName, "", dh, 10000)
             }
             
-             
+            connected = true 
                 
         } catch(Exception e) {
             // throwing a prop not found on the e...
-            log.error "Jabber Connection failed: $e.message", e
+            log.error "Jabber Connection failed: " + e.message
+            connected = false
         }
 
     }
@@ -94,24 +97,27 @@ class ChatListener {
         if (!connection)
             connect()
         
-        if (chatRoom) {
-            msgFilter = new FromMatchesFilter(chatRoom)
+        if (connected) {
+            if (chatRoom) {
+                msgFilter = new FromMatchesFilter(chatRoom)
+            } else {
+                msgFilter = new PacketTypeFilter(Message.class)
+            }
+
+            def myListener = [processPacket: { packet ->
+
+                    log.debug "Received message from ${packet.from}, subject: ${packet.subject}, body: ${packet.body}, extensions: ${packet.extensionsXML}"
+                    // callback(packet)
+
+                    targetService[listenerMethod].call(packet)
+
+            }] as PacketListener
+
+            log.debug "Adding Jabber listnener..."
+            connection.addPacketListener(myListener, msgFilter)
         } else {
-            msgFilter = new PacketTypeFilter(Message.class)
+            log.error "Unable to connect to XMPP Server, No PacketListener added."
         }
-
-        def myListener = [processPacket: { packet ->
-
-                log.debug "Received message from ${packet.from}, subject: ${packet.subject}, body: ${packet.body}, extensions: ${packet.extensionsXML}"
-                // callback(packet)
-
-                targetService[listenerMethod].call(packet)
-
-        }] as PacketListener
-
-        log.debug "Adding Jabber listnener..."
-        connection.addPacketListener(myListener, msgFilter)
-
     }
 
     def disconnect() {
